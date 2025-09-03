@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "FINOS Notion Actions API",
-    "description": "OpenAPI schema for FINOS Brand GPT actions: probes for eight Notion databases, integration check, external web search, and CSV fallback.",
+    "description": "Strict OpenAPI schema for FINOS Brand GPT actions: probes for eight Notion databases and integration check.",
     "version": "1.0.0"
   },
   "servers": [
@@ -147,59 +147,6 @@
           }
         ],
         "responses": { "200": { "description": "Prompt Library DB reachable" } }
-      }
-    },
-    "/searchWeb": {
-      "post": {
-        "operationId": "searchWeb",
-        "summary": "Search external sources for FINOS news, partners, regulators, or media.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "query": {
-                    "type": "string",
-                    "description": "Search query string."
-                  }
-                },
-                "required": ["query"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": { "description": "Search results retrieved" }
-        }
-      }
-    },
-    "/uploadBackupCSV": {
-      "post": {
-        "operationId": "uploadBackupCSV",
-        "summary": "Parse an uploaded CSV backup file for fallback when Notion DB is unreachable.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file_path": {
-                    "type": "string",
-                    "description": "Path to the uploaded CSV file."
-                  }
-                },
-                "required": ["file_path"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": { "description": "CSV parsed successfully" },
-          "400": { "description": "Invalid CSV file" }
-        }
       }
     }
   }
