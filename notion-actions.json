@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "FINOS Notion Actions API",
-    "description": "OpenAPI schema for FINOS Brand GPT actions: probes for eight Notion databases + integration check + helpers.",
+    "description": "OpenAPI schema for FINOS Brand GPT actions: probes for eight Notion databases, integration check, external web search, and CSV fallback.",
     "version": "1.0.0"
   },
   "servers": [
@@ -20,10 +20,7 @@
             "name": "Notion-Version",
             "in": "header",
             "required": true,
-            "schema": {
-              "type": "string",
-              "example": "2022-06-28"
-            }
+            "schema": { "type": "string", "example": "2022-06-28" }
           }
         ],
         "responses": {
@@ -44,10 +41,7 @@
             "schema": { "type": "string" }
           }
         ],
-        "responses": {
-          "200": { "description": "BrandBank DB reachable" },
-          "403": { "description": "Access denied" }
-        }
+        "responses": { "200": { "description": "BrandBank DB reachable" } }
       }
     },
     "/databases/240739e9c06d8135b554cff63c4dc7e9/query": {
@@ -62,7 +56,7 @@
             "schema": { "type": "string" }
           }
         ],
-        "responses": { "200": { "description": "DB reachable" } }
+        "responses": { "200": { "description": "Messaging Themes DB reachable" } }
       }
     },
     "/databases/240739e9c06d81879931fd78deaf7a64/query": {
@@ -77,7 +71,7 @@
             "schema": { "type": "string" }
           }
         ],
-        "responses": { "200": { "description": "DB reachable" } }
+        "responses": { "200": { "description": "Personas DB reachable" } }
       }
     },
     "/databases/240739e9c06d8121a6bdf69e2560eb95/query": {
@@ -92,7 +86,7 @@
             "schema": { "type": "string" }
           }
         ],
-        "responses": { "200": { "description": "DB reachable" } }
+        "responses": { "200": { "description": "Milestones DB reachable" } }
       }
     },
     "/databases/240739e9c06d81649d0bcbf1c93f5af3/query": {
@@ -107,7 +101,7 @@
             "schema": { "type": "string" }
           }
         ],
-        "responses": { "200": { "description": "DB reachable" } }
+        "responses": { "200": { "description": "Initiatives DB reachable" } }
       }
     },
     "/databases/240739e9c06d81618103c5951d2588c9/query": {
@@ -122,7 +116,7 @@
             "schema": { "type": "string" }
           }
         ],
-        "responses": { "200": { "description": "DB reachable" } }
+        "responses": { "200": { "description": "Team & Governing Board DB reachable" } }
       }
     },
     "/databases/25f739e9c06d80a88e07c2e502b4f3ae/query": {
@@ -137,7 +131,7 @@
             "schema": { "type": "string" }
           }
         ],
-        "responses": { "200": { "description": "DB reachable" } }
+        "responses": { "200": { "description": "Company Record DB reachable" } }
       }
     },
     "/databases/262739e9c06d80b4b72dd5d2112ed730/query": {
@@ -152,9 +146,61 @@
             "schema": { "type": "string" }
           }
         ],
-        "responses": { "200": { "description": "DB reachable" } }
+        "responses": { "200": { "description": "Prompt Library DB reachable" } }
+      }
+    },
+    "/searchWeb": {
+      "post": {
+        "operationId": "searchWeb",
+        "summary": "Search external sources for FINOS news, partners, regulators, or media.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Search query string."
+                  }
+                },
+                "required": ["query"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Search results retrieved" }
+        }
+      }
+    },
+    "/uploadBackupCSV": {
+      "post": {
+        "operationId": "uploadBackupCSV",
+        "summary": "Parse an uploaded CSV backup file for fallback when Notion DB is unreachable.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file_path": {
+                    "type": "string",
+                    "description": "Path to the uploaded CSV file."
+                  }
+                },
+                "required": ["file_path"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "CSV parsed successfully" },
+          "400": { "description": "Invalid CSV file" }
+        }
       }
     }
   }
 }
-
