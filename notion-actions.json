@@ -1,8 +1,8 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "FINOS Notion Actions API",
-    "description": "Strict OpenAPI schema for FINOS Brand GPT actions: probes for eight Notion databases and integration check.",
+    "description": "Strict OpenAPI 3.1 schema for FINOS Brand GPT actions: probes for eight Notion databases and integration check.",
     "version": "1.0.0"
   },
   "servers": [
