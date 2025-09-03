@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "FINOS Notion Actions API",
-    "description": "Strict OpenAPI 3.1 schema for FINOS Brand GPT actions: probes for eight Notion databases and integration check (with page_size query limit).",
-    "version": "1.0.2"
+    "description": "OpenAPI 3.1 schema for FINOS Brand GPT: probes for eight Notion databases and integration check. Each probe limits results to 1 row via requestBody.page_size.",
+    "version": "1.0.3"
   },
   "servers": [
     {
@@ -39,15 +39,28 @@
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "responses": { "200": { "description": "BrandBank DB reachable" } }
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page_size": {
+                    "type": "integer",
+                    "description": "Max number of results per page",
+                    "default": 1,
+                    "example": 1
+                  }
+                }
+              },
+              "example": { "page_size": 1 }
+            }
+          }
+        },
+        "responses": { "200": { "description": "BrandBank DB reachable (1 row max)" } }
       }
     },
     "/v1/databases/240739e9c06d8135b554cff63c4dc7e9/query": {
@@ -60,15 +73,17 @@
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "responses": { "200": { "description": "Messaging Themes DB reachable" } }
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "example": { "page_size": 1 }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Messaging Themes DB reachable (1 row max)" } }
       }
     },
     "/v1/databases/240739e9c06d81879931fd78deaf7a64/query": {
@@ -81,15 +96,17 @@
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "responses": { "200": { "description": "Personas DB reachable" } }
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "example": { "page_size": 1 }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Personas DB reachable (1 row max)" } }
       }
     },
     "/v1/databases/240739e9c06d8121a6bdf69e2560eb95/query": {
@@ -102,15 +119,17 @@
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "responses": { "200": { "description": "Milestones DB reachable" } }
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "example": { "page_size": 1 }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Milestones DB reachable (1 row max)" } }
       }
     },
     "/v1/databases/240739e9c06d81649d0bcbf1c93f5af3/query": {
@@ -123,15 +142,17 @@
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "responses": { "200": { "description": "Initiatives DB reachable" } }
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "example": { "page_size": 1 }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Initiatives DB reachable (1 row max)" } }
       }
     },
     "/v1/databases/240739e9c06d81618103c5951d2588c9/query": {
@@ -144,15 +165,17 @@
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "responses": { "200": { "description": "Team & Governing Board DB reachable" } }
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "example": { "page_size": 1 }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Team & Governing Board DB reachable (1 row max)" } }
       }
     },
     "/v1/databases/25f739e9c06d80a88e07c2e502b4f3ae/query": {
@@ -165,15 +188,17 @@
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "responses": { "200": { "description": "Company Record DB reachable" } }
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "example": { "page_size": 1 }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Company Record DB reachable (1 row max)" } }
       }
     },
     "/v1/databases/262739e9c06d80b4b72dd5d2112ed730/query": {
@@ -186,15 +211,17 @@
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "responses": { "200": { "description": "Prompt Library DB reachable" } }
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "example": { "page_size": 1 }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Prompt Library DB reachable (1 row max)" } }
       }
     }
   }
