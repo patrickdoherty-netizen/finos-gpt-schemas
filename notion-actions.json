@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "FINOS Notion Actions API",
-    "description": "Strict OpenAPI 3.1 schema for FINOS Brand GPT actions: probes for eight Notion databases and integration check (limited to 1 row per query).",
-    "version": "1.0.1"
+    "description": "Strict OpenAPI 3.1 schema for FINOS Brand GPT actions: probes for eight Notion databases and integration check (with page_size query limit).",
+    "version": "1.0.2"
   },
   "servers": [
     {
@@ -32,184 +32,168 @@
     "/v1/databases/25d739e9c06d80cb8e2febd04da0dfd0/query": {
       "post": {
         "operationId": "probeBrandBank",
-        "summary": "Probe FINOS BrandBank database (limited to 1 row).",
+        "summary": "Probe FINOS BrandBank database (limit to 1 row).",
         "parameters": [
           {
             "name": "Notion-Version",
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "example": { "page_size": 1 }
-            }
-          }
-        },
         "responses": { "200": { "description": "BrandBank DB reachable" } }
       }
     },
     "/v1/databases/240739e9c06d8135b554cff63c4dc7e9/query": {
       "post": {
         "operationId": "probeMessagingThemes",
-        "summary": "Probe FINOS Messaging Themes database (limited to 1 row).",
+        "summary": "Probe FINOS Messaging Themes database (limit to 1 row).",
         "parameters": [
           {
             "name": "Notion-Version",
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "example": { "page_size": 1 }
-            }
-          }
-        },
         "responses": { "200": { "description": "Messaging Themes DB reachable" } }
       }
     },
     "/v1/databases/240739e9c06d81879931fd78deaf7a64/query": {
       "post": {
         "operationId": "probePersonas",
-        "summary": "Probe FINOS Personas database (limited to 1 row).",
+        "summary": "Probe FINOS Personas database (limit to 1 row).",
         "parameters": [
           {
             "name": "Notion-Version",
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "example": { "page_size": 1 }
-            }
-          }
-        },
         "responses": { "200": { "description": "Personas DB reachable" } }
       }
     },
     "/v1/databases/240739e9c06d8121a6bdf69e2560eb95/query": {
       "post": {
         "operationId": "probeMilestones",
-        "summary": "Probe FINOS Milestones & Recognition database (limited to 1 row).",
+        "summary": "Probe FINOS Milestones & Recognition database (limit to 1 row).",
         "parameters": [
           {
             "name": "Notion-Version",
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "example": { "page_size": 1 }
-            }
-          }
-        },
         "responses": { "200": { "description": "Milestones DB reachable" } }
       }
     },
     "/v1/databases/240739e9c06d81649d0bcbf1c93f5af3/query": {
       "post": {
         "operationId": "probeInitiatives",
-        "summary": "Probe FINOS Initiatives & Projects database (limited to 1 row).",
+        "summary": "Probe FINOS Initiatives & Projects database (limit to 1 row).",
         "parameters": [
           {
             "name": "Notion-Version",
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "example": { "page_size": 1 }
-            }
-          }
-        },
         "responses": { "200": { "description": "Initiatives DB reachable" } }
       }
     },
     "/v1/databases/240739e9c06d81618103c5951d2588c9/query": {
       "post": {
         "operationId": "probeTeamBoard",
-        "summary": "Probe FINOS Team & Governing Board database (limited to 1 row).",
+        "summary": "Probe FINOS Team & Governing Board database (limit to 1 row).",
         "parameters": [
           {
             "name": "Notion-Version",
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "example": { "page_size": 1 }
-            }
-          }
-        },
         "responses": { "200": { "description": "Team & Governing Board DB reachable" } }
       }
     },
     "/v1/databases/25f739e9c06d80a88e07c2e502b4f3ae/query": {
       "post": {
         "operationId": "probeCompanyRecord",
-        "summary": "Probe FINOS Company Record database (limited to 1 row).",
+        "summary": "Probe FINOS Company Record database (limit to 1 row).",
         "parameters": [
           {
             "name": "Notion-Version",
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "example": { "page_size": 1 }
-            }
-          }
-        },
         "responses": { "200": { "description": "Company Record DB reachable" } }
       }
     },
     "/v1/databases/262739e9c06d80b4b72dd5d2112ed730/query": {
       "post": {
         "operationId": "probePromptLibrary",
-        "summary": "Probe FINOS Prompt Library database (limited to 1 row).",
+        "summary": "Probe FINOS Prompt Library database (limit to 1 row).",
         "parameters": [
           {
             "name": "Notion-Version",
             "in": "header",
             "required": true,
             "schema": { "type": "string" }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 1 }
           }
         ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "example": { "page_size": 1 }
-            }
-          }
-        },
         "responses": { "200": { "description": "Prompt Library DB reachable" } }
       }
     }
