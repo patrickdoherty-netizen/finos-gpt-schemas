@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "FINOS Notion Actions API",
-    "description": "OpenAPI 3.1 schema for FINOS Brand GPT: probes for eight Notion databases and integration check. Each probe limits results to 1 row via requestBody.page_size.",
-    "version": "1.0.3"
+    "description": "OpenAPI 3.1 schema for FINOS Brand GPT: probes for eight Notion databases and integration check. Each probe limited to 1 row; Team & Governing Board restricted to Name + Role to prevent oversized responses.",
+    "version": "1.0.4"
   },
   "servers": [
     {
@@ -45,17 +45,6 @@
           "required": false,
           "content": {
             "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "page_size": {
-                    "type": "integer",
-                    "description": "Max number of results per page",
-                    "default": 1,
-                    "example": 1
-                  }
-                }
-              },
               "example": { "page_size": 1 }
             }
           }
@@ -158,7 +147,7 @@
     "/v1/databases/240739e9c06d81618103c5951d2588c9/query": {
       "post": {
         "operationId": "probeTeamBoard",
-        "summary": "Probe FINOS Team & Governing Board database (limit to 1 row).",
+        "summary": "Probe FINOS Team & Governing Board database (limit to 1 row, only Name + Role).",
         "parameters": [
           {
             "name": "Notion-Version",
@@ -171,11 +160,27 @@
           "required": false,
           "content": {
             "application/json": {
-              "example": { "page_size": 1 }
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page_size": {
+                    "type": "integer",
+                    "default": 1
+                  },
+                  "filter_properties": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              },
+              "example": {
+                "page_size": 1,
+                "filter_properties": ["Name", "Role"]
+              }
             }
           }
         },
-        "responses": { "200": { "description": "Team & Governing Board DB reachable (1 row max)" } }
+        "responses": { "200": { "description": "Team & Governing Board DB reachable (Name + Role only)" } }
       }
     },
     "/v1/databases/25f739e9c06d80a88e07c2e502b4f3ae/query": {
