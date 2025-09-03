@@ -5,11 +5,8 @@
     "description": "Strict OpenAPI 3.1 schema for FINOS Brand GPT actions: probes for eight Notion databases and integration check.",
     "version": "1.0.0"
   },
-  "servers": [
-    {
-      "url": "https://api.notion.com"
-    }
-  ],
+  "servers": [{ "url": "https://api.notion.com/v1" }]
+
   "paths": {
     "/users/me": {
       "get": {
