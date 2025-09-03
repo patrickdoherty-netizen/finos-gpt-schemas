@@ -1,0 +1,160 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "FINOS Notion Actions API",
+    "description": "OpenAPI schema for FINOS Brand GPT actions: probes for eight Notion databases + integration check + helpers.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.notion.com/v1"
+    }
+  ],
+  "paths": {
+    "/users/me": {
+      "get": {
+        "operationId": "getNotionMe",
+        "summary": "Confirm FINOS Notion integration is active.",
+        "parameters": [
+          {
+            "name": "Notion-Version",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "2022-06-28"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Integration is active" },
+          "401": { "description": "Unauthorized — check token" }
+        }
+      }
+    },
+    "/databases/25d739e9c06d80cb8e2febd04da0dfd0/query": {
+      "post": {
+        "operationId": "probeBrandBank",
+        "summary": "Probe FINOS BrandBank database.",
+        "parameters": [
+          {
+            "name": "Notion-Version",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "BrandBank DB reachable" },
+          "403": { "description": "Access denied" }
+        }
+      }
+    },
+    "/databases/240739e9c06d8135b554cff63c4dc7e9/query": {
+      "post": {
+        "operationId": "probeMessagingThemes",
+        "summary": "Probe FINOS Messaging Themes database.",
+        "parameters": [
+          {
+            "name": "Notion-Version",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "DB reachable" } }
+      }
+    },
+    "/databases/240739e9c06d81879931fd78deaf7a64/query": {
+      "post": {
+        "operationId": "probePersonas",
+        "summary": "Probe FINOS Personas database.",
+        "parameters": [
+          {
+            "name": "Notion-Version",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "DB reachable" } }
+      }
+    },
+    "/databases/240739e9c06d8121a6bdf69e2560eb95/query": {
+      "post": {
+        "operationId": "probeMilestones",
+        "summary": "Probe FINOS Milestones & Recognition database.",
+        "parameters": [
+          {
+            "name": "Notion-Version",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "DB reachable" } }
+      }
+    },
+    "/databases/240739e9c06d81649d0bcbf1c93f5af3/query": {
+      "post": {
+        "operationId": "probeInitiatives",
+        "summary": "Probe FINOS Initiatives & Projects database.",
+        "parameters": [
+          {
+            "name": "Notion-Version",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "DB reachable" } }
+      }
+    },
+    "/databases/240739e9c06d81618103c5951d2588c9/query": {
+      "post": {
+        "operationId": "probeTeamBoard",
+        "summary": "Probe FINOS Team & Governing Board database.",
+        "parameters": [
+          {
+            "name": "Notion-Version",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "DB reachable" } }
+      }
+    },
+    "/databases/25f739e9c06d80a88e07c2e502b4f3ae/query": {
+      "post": {
+        "operationId": "probeCompanyRecord",
+        "summary": "Probe FINOS Company Record database.",
+        "parameters": [
+          {
+            "name": "Notion-Version",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "DB reachable" } }
+      }
+    },
+    "/databases/262739e9c06d80b4b72dd5d2112ed730/query": {
+      "post": {
+        "operationId": "probePromptLibrary",
+        "summary": "Probe FINOS Prompt Library database.",
+        "parameters": [
+          {
+            "name": "Notion-Version",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "DB reachable" } }
+      }
+    }
+  }
+}
+
