@@ -1,6 +1,6 @@
-let issues: string[] = [];
+let issues = [];
 
-export function logIssue(message: string) {
+export function logIssue(message) {
   console.warn(message);
   issues.push(`${new Date().toISOString()} - ${message}`);
 }
