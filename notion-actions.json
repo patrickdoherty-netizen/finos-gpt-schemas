@@ -13,7 +13,7 @@
   "paths": {
     "/api/queryDatabase": {
       "post": {
-        "summary": "Query rows from a Notion database",
+        "summary": "Query rows from a Notion database (via its data_source_id)",
         "operationId": "queryDatabase",
         "requestBody": {
           "required": true,
@@ -24,7 +24,7 @@
                 "properties": {
                   "database_id": {
                     "type": "string",
-                    "description": "The Notion database ID to query"
+                    "description": "The Notion database ID. The backend will resolve it to a data_source_id automatically."
                   },
                   "page_size": {
                     "type": "number",
@@ -38,7 +38,7 @@
         },
         "responses": {
           "200": {
-            "description": "Parsed and raw results from the database"
+            "description": "Parsed and raw results from the database data source"
           }
         }
       }
