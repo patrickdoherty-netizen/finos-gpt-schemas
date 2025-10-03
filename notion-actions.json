@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "FINOS Notion Actions API",
-    "description": "API for accessing FINOS Notion databases through a Vercel backend. Supports querying rows, retrieving a page, and fetching daily reports.",
-    "version": "1.0.0"
+    "description": "Vercel-hosted API for accessing FINOS Notion databases. Supports querying rows, retrieving individual pages, and generating daily diagnostic reports.",
+    "version": "1.1.0"
   },
   "servers": [
     {
@@ -13,6 +13,7 @@
   "paths": {
     "/api/queryDatabase": {
       "post": {
+        "tags": ["Notion Databases"],
         "summary": "Query rows from a Notion database (via its data_source_id)",
         "operationId": "queryDatabase",
         "requestBody": {
@@ -24,27 +25,53 @@
                 "properties": {
                   "database_id": {
                     "type": "string",
-                    "description": "The Notion database ID. The backend will resolve it to a data_source_id automatically."
+                    "description": "The Notion database ID. The backend resolves this to a data_source_id automatically."
                   },
                   "page_size": {
                     "type": "number",
                     "description": "Number of rows to fetch. Defaults to 1."
                   }
                 },
-                "required": ["database_id"]
+                "required": ["database_id"],
+                "example": {
+                  "database_id": "25d739e9c06d80cb8e2febd04da0dfd0",
+                  "page_size": 1
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Parsed and raw results from the database data source"
+            "description": "Parsed and raw results from the database data source",
+            "content": {
+              "application/json": {
+                "example": {
+                  "parsed": {
+                    "Brand Element": "Mission Statement",
+                    "Element Statement": "FINOS enables financial institutions to scale through open technologies.",
+                    "Approval Status": "Approved"
+                  },
+                  "raw": {
+                    "object": "list",
+                    "results": [
+                      {
+                        "object": "page",
+                        "id": "abc123...",
+                        "properties": { "...": "..." }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/retrievePage": {
       "post": {
+        "tags": ["Notion Databases"],
         "summary": "Retrieve all properties from a Notion page",
         "operationId": "retrievePage",
         "requestBody": {
@@ -59,25 +86,52 @@
                     "description": "The Notion page ID to retrieve"
                   }
                 },
-                "required": ["page_id"]
+                "required": ["page_id"],
+                "example": {
+                  "page_id": "abc123-page-id"
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Parsed and raw properties from the page"
+            "description": "Parsed and raw properties from the page",
+            "content": {
+              "application/json": {
+                "example": {
+                  "parsed": {
+                    "Brand Element": "Mission Statement",
+                    "Element Statement": "FINOS enables financial institutions to scale through open technologies.",
+                    "Approval Status": "Approved"
+                  },
+                  "raw": {
+                    "object": "page",
+                    "id": "abc123...",
+                    "properties": { "...": "..." }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/dailyReport": {
       "get": {
+        "tags": ["Diagnostics"],
         "summary": "Retrieve daily error and unknown property report",
         "operationId": "dailyReport",
         "responses": {
           "200": {
-            "description": "A summary of issues or '✅ No issues today.'"
+            "description": "A summary of issues or '✅ No issues today.'",
+            "content": {
+              "application/json": {
+                "example": {
+                  "report": "Daily Report: ✅ No issues or unknown property types today."
+                }
+              }
+            }
           }
         }
       }
