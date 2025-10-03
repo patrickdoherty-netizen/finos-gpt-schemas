@@ -1,153 +1,55 @@
 {
-  "openapi": "3.1.0",
-  "info": {
-    "title": "FINOS Notion Actions API",
-    "description": "OpenAPI 3.1 schema for FINOS Brand GPT: probes for eight Notion databases and integration check. Probes fetch metadata only (safe, lightweight).",
-    "version": "1.0.5"
+  "schema_version": "v1",
+  "name_for_human": "FINOS Notion Actions",
+  "name_for_model": "finos_notion_actions",
+  "description_for_human": "Access FINOS databases (BrandBank, Messaging Themes, Personas, Milestones, Initiatives, Team & Governing Board, Company Record, Prompt Library). Query live row data, retrieve pages, and generate daily error reports.",
+  "description_for_model": "Provides access to FINOS Notion databases. Use queryDatabase to fetch rows, retrievePage for full row content, and dailyReport for error/unknown property summaries.",
+  "auth": {
+    "type": "none"
   },
-  "servers": [
+  "functions": [
     {
-      "url": "https://api.notion.com"
+      "name": "queryDatabase",
+      "description": "Query rows from a Notion database by database_id. Returns parsed and raw values.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "database_id": {
+            "type": "string",
+            "description": "The Notion database ID (e.g., BrandBank, Messaging Themes)."
+          },
+          "page_size": {
+            "type": "number",
+            "description": "Number of rows to fetch. Defaults to 1."
+          }
+        },
+        "required": ["database_id"]
+      },
+      "url": "https://YOURPROJECTNAME.vercel.app/api/queryDatabase"
+    },
+    {
+      "name": "retrievePage",
+      "description": "Retrieve all properties from a single Notion page by page_id. Returns parsed and raw values.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "page_id": {
+            "type": "string",
+            "description": "The Notion page ID to retrieve."
+          }
+        },
+        "required": ["page_id"]
+      },
+      "url": "https://YOURPROJECTNAME.vercel.app/api/retrievePage"
+    },
+    {
+      "name": "dailyReport",
+      "description": "Retrieve a daily report of all issues, unknown property types, and errors encountered when parsing FINOS Notion databases.",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      },
+      "url": "https://YOURPROJECTNAME.vercel.app/api/dailyReport"
     }
-  ],
-  "paths": {
-    "/v1/users/me": {
-      "get": {
-        "operationId": "getNotionMe",
-        "summary": "Confirm FINOS Notion integration is active.",
-        "parameters": [
-          {
-            "name": "Notion-Version",
-            "in": "header",
-            "required": true,
-            "schema": { "type": "string", "example": "2022-06-28" }
-          }
-        ],
-        "responses": {
-          "200": { "description": "Integration is active" },
-          "401": { "description": "Unauthorized — check token" }
-        }
-      }
-    },
-    "/v1/databases/25d739e9c06d80cb8e2febd04da0dfd0": {
-      "get": {
-        "operationId": "probeBrandBank",
-        "summary": "Probe FINOS BrandBank database (metadata only).",
-        "parameters": [
-          {
-            "name": "Notion-Version",
-            "in": "header",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": { "200": { "description": "BrandBank DB metadata retrieved" } }
-      }
-    },
-    "/v1/databases/240739e9c06d8135b554cff63c4dc7e9": {
-      "get": {
-        "operationId": "probeMessagingThemes",
-        "summary": "Probe FINOS Messaging Themes database (metadata only).",
-        "parameters": [
-          {
-            "name": "Notion-Version",
-            "in": "header",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": { "200": { "description": "Messaging Themes DB metadata retrieved" } }
-      }
-    },
-    "/v1/databases/240739e9c06d81879931fd78deaf7a64": {
-      "get": {
-        "operationId": "probePersonas",
-        "summary": "Probe FINOS Personas database (metadata only).",
-        "parameters": [
-          {
-            "name": "Notion-Version",
-            "in": "header",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": { "200": { "description": "Personas DB metadata retrieved" } }
-      }
-    },
-    "/v1/databases/240739e9c06d8121a6bdf69e2560eb95": {
-      "get": {
-        "operationId": "probeMilestones",
-        "summary": "Probe FINOS Milestones & Recognition database (metadata only).",
-        "parameters": [
-          {
-            "name": "Notion-Version",
-            "in": "header",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": { "200": { "description": "Milestones DB metadata retrieved" } }
-      }
-    },
-    "/v1/databases/240739e9c06d81649d0bcbf1c93f5af3": {
-      "get": {
-        "operationId": "probeInitiatives",
-        "summary": "Probe FINOS Initiatives & Projects database (metadata only).",
-        "parameters": [
-          {
-            "name": "Notion-Version",
-            "in": "header",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": { "200": { "description": "Initiatives DB metadata retrieved" } }
-      }
-    },
-    "/v1/databases/240739e9c06d81618103c5951d2588c9": {
-      "get": {
-        "operationId": "probeTeamBoard",
-        "summary": "Probe FINOS Team & Governing Board database (metadata only).",
-        "parameters": [
-          {
-            "name": "Notion-Version",
-            "in": "header",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": { "200": { "description": "Team & Governing Board DB metadata retrieved" } }
-      }
-    },
-    "/v1/databases/25f739e9c06d80a88e07c2e502b4f3ae": {
-      "get": {
-        "operationId": "probeCompanyRecord",
-        "summary": "Probe FINOS Company Record database (metadata only).",
-        "parameters": [
-          {
-            "name": "Notion-Version",
-            "in": "header",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": { "200": { "description": "Company Record DB metadata retrieved" } }
-      }
-    },
-    "/v1/databases/262739e9c06d80b4b72dd5d2112ed730": {
-      "get": {
-        "operationId": "probePromptLibrary",
-        "summary": "Probe FINOS Prompt Library database (metadata only).",
-        "parameters": [
-          {
-            "name": "Notion-Version",
-            "in": "header",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": { "200": { "description": "Prompt Library DB metadata retrieved" } }
-      }
-    }
-  }
+  ]
 }
