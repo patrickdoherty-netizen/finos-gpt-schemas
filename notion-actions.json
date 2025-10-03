@@ -1,55 +1,86 @@
 {
-  "schema_version": "v1",
-  "name_for_human": "FINOS Notion Actions",
-  "name_for_model": "finos_notion_actions",
-  "description_for_human": "Access FINOS databases (BrandBank, Messaging Themes, Personas, Milestones, Initiatives, Team & Governing Board, Company Record, Prompt Library). Query live row data, retrieve pages, and generate daily error reports.",
-  "description_for_model": "Provides access to FINOS Notion databases. Use queryDatabase to fetch rows, retrievePage for full row content, and dailyReport for error/unknown property summaries.",
-  "auth": {
-    "type": "none"
+  "openapi": "3.0.0",
+  "info": {
+    "title": "FINOS Notion Actions API",
+    "description": "API for accessing FINOS Notion databases through a Vercel backend. Supports querying rows, retrieving a page, and fetching daily reports.",
+    "version": "1.0.0"
   },
-  "functions": [
+  "servers": [
     {
-      "name": "queryDatabase",
-      "description": "Query rows from a Notion database by database_id. Returns parsed and raw values.",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "database_id": {
-            "type": "string",
-            "description": "The Notion database ID (e.g., BrandBank, Messaging Themes)."
-          },
-          "page_size": {
-            "type": "number",
-            "description": "Number of rows to fetch. Defaults to 1."
-          }
-        },
-        "required": ["database_id"]
-      },
-      "url": "https://finos-gpt-schemas.vercel.app/api/queryDatabase"
-    },
-    {
-      "name": "retrievePage",
-      "description": "Retrieve all properties from a single Notion page by page_id. Returns parsed and raw values.",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "page_id": {
-            "type": "string",
-            "description": "The Notion page ID to retrieve."
-          }
-        },
-        "required": ["page_id"]
-      },
-      "url": "https://finos-gpt-schemas.vercel.app/api/retrievePage"
-    },
-    {
-      "name": "dailyReport",
-      "description": "Retrieve a daily report of all issues, unknown property types, and errors encountered when parsing FINOS Notion databases.",
-      "parameters": {
-        "type": "object",
-        "properties": {}
-      },
-      "url": "https://finos-gpt-schemas.vercel.app/api/dailyReport"
+      "url": "https://finos-gpt-schemas.vercel.app"
     }
-  ]
+  ],
+  "paths": {
+    "/api/queryDatabase": {
+      "post": {
+        "summary": "Query rows from a Notion database",
+        "operationId": "queryDatabase",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "database_id": {
+                    "type": "string",
+                    "description": "The Notion database ID to query"
+                  },
+                  "page_size": {
+                    "type": "number",
+                    "description": "Number of rows to fetch. Defaults to 1."
+                  }
+                },
+                "required": ["database_id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Parsed and raw results from the database"
+          }
+        }
+      }
+    },
+    "/api/retrievePage": {
+      "post": {
+        "summary": "Retrieve all properties from a Notion page",
+        "operationId": "retrievePage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page_id": {
+                    "type": "string",
+                    "description": "The Notion page ID to retrieve"
+                  }
+                },
+                "required": ["page_id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Parsed and raw properties from the page"
+          }
+        }
+      }
+    },
+    "/api/dailyReport": {
+      "get": {
+        "summary": "Retrieve daily error and unknown property report",
+        "operationId": "dailyReport",
+        "responses": {
+          "200": {
+            "description": "A summary of issues or '✅ No issues today.'"
+          }
+        }
+      }
+    }
+  }
 }
