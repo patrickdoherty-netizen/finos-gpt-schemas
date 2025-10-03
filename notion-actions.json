@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "FINOS Notion Actions API",
-    "description": "Vercel-hosted API for accessing FINOS Notion databases. Supports querying rows, retrieving individual pages, and generating daily diagnostic reports.",
-    "version": "1.1.0"
+    "description": "Vercel-hosted API for accessing FINOS Notion databases using data source IDs. Supports querying rows, retrieving individual pages, and generating daily diagnostic reports.",
+    "version": "1.2.0"
   },
   "servers": [
     {
@@ -14,7 +14,7 @@
     "/api/queryDatabase": {
       "post": {
         "tags": ["Notion Databases"],
-        "summary": "Query rows from a Notion database (via its data_source_id)",
+        "summary": "Query rows from a Notion data source",
         "operationId": "queryDatabase",
         "requestBody": {
           "required": true,
@@ -23,18 +23,18 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "database_id": {
+                  "data_source_id": {
                     "type": "string",
-                    "description": "The Notion database ID. The backend resolves this to a data_source_id automatically."
+                    "description": "The Notion data source ID (use one of the provided FINOS IDs)."
                   },
                   "page_size": {
                     "type": "number",
                     "description": "Number of rows to fetch. Defaults to 1."
                   }
                 },
-                "required": ["database_id"],
+                "required": ["data_source_id"],
                 "example": {
-                  "database_id": "25d739e9c06d80cb8e2febd04da0dfd0",
+                  "data_source_id": "25d739e9-c06d-8173-b033-000bfd831c0d",
                   "page_size": 1
                 }
               }
@@ -43,7 +43,7 @@
         },
         "responses": {
           "200": {
-            "description": "Parsed and raw results from the database data source",
+            "description": "Parsed and raw results from the Notion data source",
             "content": {
               "application/json": {
                 "example": {
@@ -55,11 +55,7 @@
                   "raw": {
                     "object": "list",
                     "results": [
-                      {
-                        "object": "page",
-                        "id": "abc123...",
-                        "properties": { "...": "..." }
-                      }
+                      { "object": "page", "id": "abc123...", "properties": { "...": "..." } }
                     ]
                   }
                 }
@@ -107,7 +103,7 @@
                   },
                   "raw": {
                     "object": "page",
-                    "id": "abc123...",
+                    "id": "abc123-page-id",
                     "properties": { "...": "..." }
                   }
                 }
