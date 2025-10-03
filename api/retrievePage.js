@@ -1,11 +1,10 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
 import fetch from "node-fetch";
-import { parsePageProperties } from "../parser";
-import { logIssue } from "../logger";
+import { parsePageProperties } from "../parser.js";
+import { logIssue } from "../logger.js";
 
 const NOTION_VERSION = "2025-09-03";
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   try {
     const { page_id } = req.body;
 
@@ -27,7 +26,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const parsed = parsePageProperties(data, logIssue);
 
     res.status(200).json({ parsed, raw: data });
-  } catch (err: any) {
+  } catch (err) {
     logIssue(`❌ Error in retrievePage: ${err.message}`);
     res.status(500).json({ error: err.message });
   }
