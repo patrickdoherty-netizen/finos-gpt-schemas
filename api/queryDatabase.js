@@ -6,34 +6,16 @@ const NOTION_VERSION = "2025-09-03";
 
 export default async function handler(req, res) {
   try {
-    const { database_id, page_size = 1 } = req.body;
+    const { data_source_id, page_size = 1 } = req.body;
 
-    // Step 1: Fetch database metadata to get data_source_id
-    const dbRes = await fetch(`https://api.notion.com/v1/databases/${database_id}`, {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${process.env.NOTION_TOKEN}`,
-        "Notion-Version": NOTION_VERSION
-      }
-    });
-
-    if (!dbRes.ok) {
-      const errorText = await dbRes.text();
-      logIssue(`❌ Failed to fetch database metadata: ${errorText}`);
-      return res.status(dbRes.status).json({ error: errorText });
-    }
-
-    const dbData = await dbRes.json();
-    const dataSourceId = dbData.data_sources?.[0]?.id;
-
-    if (!dataSourceId) {
-      const message = "❌ No data_source_id found for database";
+    if (!data_source_id) {
+      const message = "❌ data_source_id is required";
       logIssue(message);
       return res.status(400).json({ error: message });
     }
 
-    // Step 2: Query the data source
-    const queryRes = await fetch(`https://api.notion.com/v1/data-sources/${dataSourceId}/query`, {
+    // Query the data source directly
+    const queryRes = await fetch(`https://api.notion.com/v1/data-sources/${data_source_id}/query`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${process.env.NOTION_TOKEN}`,
