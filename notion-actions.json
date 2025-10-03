@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.1.0",
   "info": {
     "title": "FINOS Notion Actions API",
     "description": "API for accessing FINOS Notion databases through a Vercel backend. Supports querying rows, retrieving a page, and fetching daily reports.",
