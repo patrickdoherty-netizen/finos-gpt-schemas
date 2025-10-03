@@ -1,7 +1,6 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
-import { getIssues, clearIssues } from "../logger";
+import { getIssues, clearIssues } from "../logger.js";
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   const issues = getIssues();
 
   const report = issues.length > 0
