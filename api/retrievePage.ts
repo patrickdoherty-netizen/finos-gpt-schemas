@@ -3,6 +3,8 @@ import fetch from "node-fetch";
 import { parsePageProperties } from "../parser";
 import { logIssue } from "../logger";
 
+const NOTION_VERSION = "2025-09-03";
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { page_id } = req.body;
@@ -11,9 +13,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${process.env.NOTION_TOKEN}`,
-        "Notion-Version": "2022-06-28"
+        "Notion-Version": NOTION_VERSION
       }
     });
+
+    if (!notionRes.ok) {
+      const errorText = await notionRes.text();
+      logIssue(`❌ Failed to retrieve page: ${errorText}`);
+      return res.status(notionRes.status).json({ error: errorText });
+    }
 
     const data = await notionRes.json();
     const parsed = parsePageProperties(data, logIssue);
