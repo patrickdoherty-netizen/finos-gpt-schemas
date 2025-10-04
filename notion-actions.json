@@ -1,136 +1,75 @@
-{
-  "openapi": "3.1.0",
-  "info": {
-    "title": "FINOS Notion Actions API",
-    "description": "Vercel-hosted API for accessing FINOS Notion databases using data source IDs. Supports querying rows, retrieving individual pages, and generating daily diagnostic reports.",
-    "version": "1.2.0"
-  },
-  "servers": [
-    {
-      "url": "https://finos-gpt-schemas.vercel.app"
+import fetch from "node-fetch";
+import { parsePageProperties } from "../parser.js";
+import { logIssue } from "../logger.js";
+
+const NOTION_VERSION = "2025-09-03";
+
+export default async function handler(req, res) {
+  try {
+    console.log("---------------------------------------------------");
+    console.log("👉 Function invoked at:", new Date().toISOString());
+    console.log("👉 Raw req.body:", req.body);
+
+    // Handle raw string body (Vercel sometimes passes strings)
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+    console.log("👉 Parsed body:", body);
+
+    const { data_source_id, page_size = 1 } = body;
+    console.log("👉 Using data_source_id:", data_source_id);
+    console.log("👉 NOTION_TOKEN present?", !!process.env.NOTION_TOKEN);
+
+    if (!data_source_id) {
+      const message = "❌ data_source_id is required in the request body.";
+      console.error(message);
+      return res.status(400).json({ error: message });
     }
-  ],
-  "paths": {
-    "/api/queryDatabase": {
-      "post": {
-        "tags": ["Notion Databases"],
-        "summary": "Query rows from a Notion data source",
-        "operationId": "queryDatabase",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "data_source_id": {
-                    "type": "string",
-                    "description": "The Notion data source ID (use one of the provided FINOS IDs)."
-                  },
-                  "page_size": {
-                    "type": "number",
-                    "description": "Number of rows to fetch. Defaults to 1."
-                  }
-                },
-                "required": ["data_source_id"],
-                "example": {
-                  "data_source_id": "25d739e9-c06d-8173-b033-000bfd831c0d",
-                  "page_size": 1
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Parsed and raw results from the Notion data source",
-            "content": {
-              "application/json": {
-                "example": {
-                  "parsed": {
-                    "Brand Element": "Mission Statement",
-                    "Element Statement": "FINOS enables financial institutions to scale through open technologies.",
-                    "Approval Status": "Approved"
-                  },
-                  "raw": {
-                    "object": "list",
-                    "results": [
-                      { "object": "page", "id": "abc123...", "properties": { "...": "..." } }
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/retrievePage": {
-      "post": {
-        "tags": ["Notion Databases"],
-        "summary": "Retrieve all properties from a Notion page",
-        "operationId": "retrievePage",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "page_id": {
-                    "type": "string",
-                    "description": "The Notion page ID to retrieve"
-                  }
-                },
-                "required": ["page_id"],
-                "example": {
-                  "page_id": "abc123-page-id"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Parsed and raw properties from the page",
-            "content": {
-              "application/json": {
-                "example": {
-                  "parsed": {
-                    "Brand Element": "Mission Statement",
-                    "Element Statement": "FINOS enables financial institutions to scale through open technologies.",
-                    "Approval Status": "Approved"
-                  },
-                  "raw": {
-                    "object": "page",
-                    "id": "abc123-page-id",
-                    "properties": { "...": "..." }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/dailyReport": {
-      "get": {
-        "tags": ["Diagnostics"],
-        "summary": "Retrieve daily error and unknown property report",
-        "operationId": "dailyReport",
-        "responses": {
-          "200": {
-            "description": "A summary of issues or '✅ No issues today.'",
-            "content": {
-              "application/json": {
-                "example": {
-                  "report": "Daily Report: ✅ No issues or unknown property types today."
-                }
-              }
-            }
-          }
-        }
-      }
+
+    // Build query
+    const notionURL = `https://api.notion.com/v1/data-sources/${data_source_id}/query`;
+    console.log("👉 Notion endpoint:", notionURL);
+
+    const notionRes = await fetch(notionURL, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.NOTION_TOKEN}`,
+        "Notion-Version": NOTION_VERSION,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ page_size })
+    });
+
+    console.log("👉 Notion response status:", notionRes.status);
+
+    // Read Notion response
+    const text = await notionRes.text();
+    console.log("👉 Notion raw response text:", text);
+
+    if (!notionRes.ok) {
+      console.error("❌ Notion API returned an error:", text);
+      logIssue(`❌ Notion API error: ${text}`);
+      return res.status(notionRes.status).json({
+        error: "Notion API error",
+        details: text
+      });
     }
+
+    // Parse response
+    const data = JSON.parse(text);
+    console.log("✅ Parsed Notion response successfully.");
+
+    const parsed = data.results.map((page) =>
+      parsePageProperties(page, logIssue)
+    );
+
+    res.status(200).json({
+      message: "✅ Successfully retrieved data from Notion.",
+      parsed,
+      raw: data
+    });
+  } catch (err) {
+    console.error("❌ queryDatabase crashed:", err.message);
+    console.error(err.stack);
+    logIssue(`❌ queryDatabase crashed: ${err.message}`);
+    res.status(500).json({ error: err.message });
   }
 }
