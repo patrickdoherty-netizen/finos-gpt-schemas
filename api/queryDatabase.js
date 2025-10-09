@@ -17,7 +17,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "❌ data_source_id is required" });
     }
 
-    const queryRes = await fetch(`https://api.notion.com/v1/data-sources/${data_source_id}/query`, {
+    const queryRes = await fetch(`https://api.notion.com/v1/data_sources/${data_source_id}/query`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${process.env.NOTION_TOKEN}`,
